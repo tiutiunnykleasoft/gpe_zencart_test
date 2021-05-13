@@ -3,16 +3,16 @@ $method_name = strtoupper(explode('.php',basename(__FILE__))[0]);
 
 define('MODULE_PAYMENT_'.$method_name.'_ORDER_DESCRIPTION', "Ihre Bestellung %s bei %s");
 
-define('MODULE_PAYMENT_'.$method_name.'_TEXT_TITLE', "Apple Pay");
+define('MODULE_PAYMENT_'.$method_name.'_TEXT_TITLE', "Google Pay");
 define('MODULE_PAYMENT_'.$method_name.'_TEXT_DESCRIPTION', "Die Zahlungsmethode wird bereitgestellt von EMS Online.");
 
 define('MODULE_PAYMENT_'.$method_name.'_DISPLAY_TITLE_TEXT', "Zahlungsmethode Anzeigename");
 define('MODULE_PAYMENT_'.$method_name.'_DISPLAY_TITLE_DESCRIPTION', "Name der Zahlungsmethode, die dem Kunden angezeigt wird.");
 
-define('MODULE_PAYMENT_'.$method_name.'_STATUS_TEXT', "Aktivieren Apple Pay");
-define('MODULE_PAYMENT_'.$method_name.'_STATUS_DESCRIPTION', "Wollen Sie Apple Pay aktivieren?");
+define('MODULE_PAYMENT_'.$method_name.'_STATUS_TEXT', "Aktivieren Google Pay");
+define('MODULE_PAYMENT_'.$method_name.'_STATUS_DESCRIPTION', "Wollen Sie Google Pay aktivieren?");
 
-define('MODULE_PAYMENT_'.$method_name.'_SORT_ORDER_TEXT', "Sortierreihenfolge für Apple Pay");
+define('MODULE_PAYMENT_'.$method_name.'_SORT_ORDER_TEXT', "Sortierreihenfolge für Google Pay");
 define('MODULE_PAYMENT_'.$method_name.'_SORT_ORDER_DESCRIPTION', "Die Zahlungsmethode mit der niedrigsten Reihenfolge wird zuerst angezeigt.");
 
 define('MODULE_PAYMENT_'.$method_name.'_ZONE_TEXT', "Zone für die Verfügbarkeit der Zahlungsmethode");

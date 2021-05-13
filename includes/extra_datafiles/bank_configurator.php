@@ -32,7 +32,8 @@ define('GINGER_PAYMENT_MAPPING',[
     'paypal' => 'paypal',
     'amex' => 'amex',
     'tikkiepaymentrequest' => 'tikkie-payment-request',
-    'wechat' => 'wechat'
+    'wechat' => 'wechat',
+    'googlepay' => 'google-pay'
 ]);
 
 define('GINGER_AVAILABLE_CURRENCIES', [
@@ -48,5 +49,6 @@ define('GINGER_AVAILABLE_CURRENCIES', [
     'paypal' => ['AUD', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'NOK', 'PLN', 'SEK', 'SGD', 'USD'],
     'amex' => ['AUD', 'CHF', 'DKK', 'EUR', 'GBP', 'HKD', 'JPY', 'NOK', 'NZD', 'SEK', 'SGD', 'USD'],
     'tikkiepaymentrequest' => 'EUR',
-    'wechat' => ['EUR', 'USD', 'CNY', 'AUD', 'CAD', 'GBP', 'HKD', 'JPY', 'NZD', 'SGD', 'THB', 'KRW', 'RUB', 'DKK', 'SEK', 'CHF', 'NOK']
+    'wechat' => ['EUR', 'USD', 'CNY', 'AUD', 'CAD', 'GBP', 'HKD', 'JPY', 'NZD', 'SGD', 'THB', 'KRW', 'RUB', 'DKK', 'SEK', 'CHF', 'NOK'],
+    'googlepay' => 'EUR'
 ]);
