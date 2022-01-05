@@ -1,24 +1,26 @@
 <?php
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/includes/classes/gateways/autoload.php');
+
 /**
  * Class for iDEAL payment method
  */
 class emspay_ideal extends gingerPaymentDefault
 {
     public $code = 'ideal';
+
     /**
      * @return string
      */
     public function javascript_validation()
     {
         return
-            'if (payment_value == "'.$this->code.'") {'."\n".
-            '   var issuer_id = document.checkout_payment.issuer_id.value;'."\n".
-            '   if (issuer_id == "") {'."\n".
-            '       error_message = error_message + "'.MODULE_PAYMENT_GINGER_IDEAL_ERROR_ISSUER.'";'."\n".
-            '       error = 1;'."\n".
-            '   }'."\n".
-            '}'."\n";
+            'if (payment_value == "' . $this->code . '") {' . "\n" .
+            '   var issuer_id = document.checkout_payment.issuer_id.value;' . "\n" .
+            '   if (issuer_id == "") {' . "\n" .
+            '       error_message = error_message + "' . constant("MODULE_PAYMENT_" . strtoupper(GINGER_BANK_PREFIX) . "_IDEAL_ERROR_ISSUER") . '";' . "\n" .
+            '       error = 1;' . "\n" .
+            '   }' . "\n" .
+            '}' . "\n";
     }
 
     /**
@@ -42,7 +44,7 @@ class emspay_ideal extends gingerPaymentDefault
         global $messageStack;
 
         if (empty($this->getIssuerId())) {
-            $messageStack->add_session('checkout_payment', constant(MODULE_PAYMENT_.strtoupper($this->code)._ERROR_ISSUER), 'error');
+            $messageStack->add_session('checkout_payment', constant(MODULE_PAYMENT_ . strtoupper($this->code) . _ERROR_ISSUER), 'error');
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
         }
     }

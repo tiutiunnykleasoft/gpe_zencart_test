@@ -60,36 +60,4 @@ class emspay_klarnapaylater extends gingerPaymentDefault
     {
         return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
-
-    /**
-     * @param $orderId
-     * @param $status
-     */
-    public function _doStatusUpdate($orderId, $status)
-    {
-        if ($status == (int)constant(MODULE_PAYMENT_ . strtoupper(GINGER_BANK_PREFIX) . _ORDER_STATUS_SHIPPED)) {
-            $orderHistory = $this->getOrderHistory($orderId);
-            $gingerOrderId = $this->searchHistoryForOrderKey($orderHistory);
-            if ($gingerOrderId) {
-                $this->captureKlarnaPayLaterOrder($gingerOrderId);
-            }
-        }
-    }
-
-    /**
-     * Obtain EMS Online order id from order history.
-     *
-     * @param array $orderHistory
-     * @return string|null
-     */
-    public function searchHistoryForOrderKey(array $orderHistory)
-    {
-        foreach ($orderHistory as $history) {
-            preg_match('/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/', $history['comments'], $orderKey);
-            if (count($orderKey) > 0) {
-                return $orderKey[0];
-            }
-        }
-        return null;
-    }
 }
