@@ -57,4 +57,15 @@
 * Solved issue when Klarna Pay Later had missing keys in translation files.
 * Solved issue when Klarna Pay Later doesn't install.
 * Solved issue UpdateOrderStatus function for payment methods with order lines.
-* Solved issue when bad currency list warning displays on the checkout page when not expected. 
+* Solved issue when bad currency list warning displays on the checkout page when not expected.
+
+## 1.3.3 ##
+
+* Implemented a new extra array with additional environment information for the order.
+* Implemented Apple Pay detection.
+* Implemented Order Lines for every order.
+* Implemented extra option to iDeal issuer list, with empty value.
+* Updated customer array.
+* Updated field, which is has been used for before capturing check.
+* Fixed iDeal issuer form waring message, where constant prints instead of a label.
+* Replaced constant version to placeholders, to replace it on GitHub actions steps according to tag version. 

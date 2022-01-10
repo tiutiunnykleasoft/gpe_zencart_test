@@ -11,7 +11,7 @@ class baseGingerGateway extends base
      *
      * @var string
      */
-    public $moduleVersion = '1.3.2';
+    public $moduleVersion = "1.3.3";
 
     /**
      * @var /Ginger/ApiClient Ginger Payments SDK client
