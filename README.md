@@ -33,7 +33,7 @@ Version 1.3.3
 * MySQL v5.4 and above
 
 ## Installation
- 1. Upload all of the folders in the ZIP file into your ZenCart public path (no files are transferred). You can use an sFTP or SCP program, for example, to upload the files. There are various sFTP clients that you can download free of charge from the internet, such as WinSCP or Filezilla.
+ 1. Upload all the folders in the ZIP file into your ZenCart public path (no files are transferred). You can use an sFTP or SCP program, for example, to upload the files. There are various sFTP clients that you can download free of charge from the internet, such as WinSCP or Filezilla.
 
  2. Go to your ZenCart admin environment 'Localization' > ' Orders Status' > click 'Insert' button and add new order statuses as follows:
  

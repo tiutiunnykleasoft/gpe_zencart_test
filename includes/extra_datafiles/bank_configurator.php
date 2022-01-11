@@ -36,6 +36,11 @@ const GINGER_PAYMENT_MAPPING = [
     'googlepay' => 'google-pay'
 ];
 
+function getBankRepoPrefix(): string
+{
+    return 'ems-online';
+}
+
 function getGingerPluginName(): string
 {
     return 'ems-online-zencart';

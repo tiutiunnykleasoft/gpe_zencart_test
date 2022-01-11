@@ -159,9 +159,9 @@ class baseGingerGateway extends base
      */
     public function saveBankReferences($gingerOrder)
     {
-        $bankReference = $gingerOrder['transactions'][0]['payment_method_details']['reference'];
+        $bankReference = current($gingerOrder['transactions'])['payment_method_details']['reference'];
         $_SESSION[$this->code . '_reference'] = $bankReference;
-        $_SESSION[$this->code . '_order_id'] = $gingerOrder['transactions'][0]['order_id'];
+        $_SESSION[$this->code . '_order_id'] = current($gingerOrder['transactions'])['order_id'];
         $_SESSION['payment_method_messages'] = str_replace(
             '{{reference}}',
             $bankReference,
@@ -189,16 +189,16 @@ class baseGingerGateway extends base
     }
 
     /**
-     * Initiate EMS Online API client.
+     * Initiate Ginger API client.
      *
      * @param string $code
      * @return \Ginger\ApiClient
      */
     public static function getApiKey($code = GINGER_BANK_PREFIX)
     {
-        if (strlen(constant("MODULE_PAYMENT_GINGER_KLARNA_TEST_API_KEY")) === 32 && $code == 'emspay_klarnapaylater') {
+        if (strlen(constant("MODULE_PAYMENT_GINGER_KLARNA_TEST_API_KEY")) === 32 && $code == constant("GINGER_BANK_PREFIX") . '_klarnapaylater') {
             $apiKey = constant("MODULE_PAYMENT_GINGER_KLARNA_TEST_API_KEY");
-        } elseif (strlen(constant("MODULE_PAYMENT_GINGER_AFTERPAY_TEST_API_KEY")) === 32 && $code == 'emspay_afterpay') {
+        } elseif (strlen(constant("MODULE_PAYMENT_GINGER_AFTERPAY_TEST_API_KEY")) === 32 && $code == constant("GINGER_BANK_PREFIX") . '_afterpay') {
             $apiKey = constant("MODULE_PAYMENT_GINGER_AFTERPAY_TEST_API_KEY");
         } else {
             $apiKey = constant("MODULE_PAYMENT_" . strtoupper(constant("GINGER_BANK_PREFIX")) . "_API_KEY");
@@ -328,7 +328,7 @@ class baseGingerGateway extends base
                 case 'error' :
                     $messageStack->add_session(
                         'checkout_payment',
-                        $ginger_order['transactions'][0]['customer_message'] ?? constant("MODULE_PAYMENT_" . strtoupper($this->code) . "_ERROR_TRANSACTION"),
+                        current($ginger_order['transactions'])['customer_message'] ?? constant("MODULE_PAYMENT_" . strtoupper($this->code) . "_ERROR_TRANSACTION"),
                         'error'
                     );
                     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -390,7 +390,7 @@ class baseGingerGateway extends base
     public function saveOrderInHistory($order)
     {
         static::updateOrderStatus($this->getOrderId(), static::getZenStatusId($order));
-        static::addOrderHistory($this->getOrderId(), static::getZenStatusId($order), $order['transactions'][0]['order_id']);
+        static::addOrderHistory($this->getOrderId(), static::getZenStatusId($order), current($order['transactions'])['order_id']);
     }
 
     /**
@@ -471,12 +471,10 @@ class baseGingerGateway extends base
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
             'ip_address' => $_SESSION['customers_ip_address'],
             'locale' => $_SESSION['languages_code'],
-            $this->isRequiredOrderLines() ? $this->getAdditionalCustomerInfo($order) : null
+            'additional_address' => $this->getAdditionalAddress($order)
         ]);
 
-        if ($this->isRequiredOrderLines()) {
-            $customer = array_merge($customer, $this->getAdditionalCustomerInfo($order));
-        }
+        if ($this->isAfterPay()) $customer = array_merge($customer, $this->getAdditionalCustomerInfo());
 
         return $customer;
     }
@@ -485,12 +483,11 @@ class baseGingerGateway extends base
      * @param $order
      * @return array
      */
-    protected function getAdditionalCustomerInfo($order): array
+    protected function getAdditionalCustomerInfo(): array
     {
         return [
             'gender' => $this->getCustomPaymentField($this->code . '_gender'),
             'birthdate' => $this->getCustomPaymentField($this->code . '_dob'),
-            'additional_address' => $this->getAdditionalAddress($order)
         ];
     }
 
@@ -515,8 +512,7 @@ class baseGingerGateway extends base
      */
     public function getReturnUrl()
     {
-        $prepared = function_exists('zen_href_link') ? zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') : 'localhost';
-        return str_replace('localhost:8080', '34ff-31-128-71-69.ngrok.io', $prepared);
+        return function_exists('zen_href_link') ? zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL') : 'localhost';
     }
 
     /**
@@ -651,7 +647,7 @@ class baseGingerGateway extends base
     }
 
     /**
-     * Map EMS Online statuses to ZenCart.
+     * Map Ginger statuses to ZenCart.
      *
      * @param array $ginger_order
      * @return null
@@ -684,7 +680,7 @@ class baseGingerGateway extends base
         try {
             $gingerOrder = $this->ginger->getOrder($gingerOrderId);
             static::updateOrderStatus($this->getOrderId(), static::getZenStatusId($gingerOrder));
-            static::addOrderHistory($this->getOrderId(), static::getZenStatusId($gingerOrder), $gingerOrder['transactions'][0]['order_id']);
+            static::addOrderHistory($this->getOrderId(), static::getZenStatusId($gingerOrder), current($gingerOrder['transactions'])['order_id']);
             if ($gingerOrder['status'] == 'completed') {
                 $this->emptyCart();
                 zen_redirect(zen_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
@@ -695,7 +691,7 @@ class baseGingerGateway extends base
                 || $gingerOrder['status'] == 'expired'
             ) {
                 $this->loadLanguageFile(constant("GINGER_BANK_PREFIX"));
-                $customer_message = $gingerOrder['transactions'][0]['customer_message'] ?: constant("MODULE_PAYMENT_" . strtoupper(constant("GINGER_BANK_PREFIX")) . "_ERROR_TRANSACTION");
+                $customer_message = current($gingerOrder['transactions'])['customer_message'] ?: constant("MODULE_PAYMENT_" . strtoupper(constant("GINGER_BANK_PREFIX")) . "_ERROR_TRANSACTION");
                 $messageStack->add_session('checkout_payment', $customer_message, 'error');
                 zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
@@ -850,7 +846,7 @@ class baseGingerGateway extends base
         </script>";
         echo $a;
 
-        return $_COOKIE["ginger_apple_pay_status"];
+        return $_COOKIE["ginger_apple_pay_status"] === 'true';
     }
 
     /**

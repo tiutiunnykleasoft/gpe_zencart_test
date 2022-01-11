@@ -34,7 +34,7 @@
 
 ## 1.3.0 ## 
 
-* Updated EMS to ZenCart status mapping.
+* Updated Ginger to ZenCart status mapping.
 * Completed utilize duplicate code.
 * Custom prefixes were added to all function/files.
 * Input_filter was added to all variables from the HTTP request.

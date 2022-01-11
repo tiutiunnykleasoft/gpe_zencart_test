@@ -35,8 +35,8 @@ class gingerPaymentDefault extends gingerGateway
         $this->enabled = ((constant(MODULE_PAYMENT_ . strtoupper($this->code) . _STATUS) == 'True') ? true : false);
         if (is_object($order)) {
             $this->update_status();
-            if ($this->isKlarnaPayLater()) {
-                $this->enabled = $this->enabled ? $this->gingerKlarnaPayLaterIpFiltering() : false;
+            if ($this->isKlarnaPayLater() && $this->enabled) {
+                $this->enabled = $this->gingerKlarnaPayLaterIpFiltering();
             } elseif ($this->isAfterPay() && $this->enabled) {
                 $this->enabled = $this->gingerAfterPayIpFiltering() && $this->gingerAfterPayCountriesValidation($order);
             } elseif ($this->isApplePay() && $this->enabled) {
@@ -119,7 +119,7 @@ class gingerPaymentDefault extends gingerGateway
     }
 
     /**
-     * Obtain EMS Online order id from order history.
+     * Obtain Ginger order id from order history.
      *
      * @param array $orderHistory
      * @return string|null
@@ -366,7 +366,7 @@ class gingerPaymentDefault extends gingerGateway
         if (in_array($this->code, [GINGER_BANK_PREFIX . '_banktransfer'])) {
             $this->saveBankReferences($gingerOrder);
             static::updateOrderStatus($this->getOrderId(), static::getZenStatusId($gingerOrder));
-            static::addOrderHistory($this->getOrderId(), static::getZenStatusId($gingerOrder), $gingerOrder['transactions'][0]['order_id']);
+            static::addOrderHistory($this->getOrderId(), static::getZenStatusId($gingerOrder), current($gingerOrder['transactions'])['order_id']);
             static::addOrderHistory($this->getOrderId(), static::getZenStatusId($gingerOrder), $_SESSION[$this->code . '_reference']);
         } else {
             zen_redirect(current($gingerOrder['transactions'])['payment_url']);
