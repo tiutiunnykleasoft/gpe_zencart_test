@@ -29,17 +29,19 @@ class gingerPaymentDefault extends gingerGateway
 
         $this->loadLanguageFile();
 
-        $this->title = constant(MODULE_PAYMENT_ . strtoupper($this->code) . _TEXT_TITLE);
-        $this->description = constant(MODULE_PAYMENT_ . strtoupper($this->code) . _TEXT_DESCRIPTION);
-        $this->sort_order = constant(MODULE_PAYMENT_ . strtoupper($this->code) . _SORT_ORDER);
-        $this->enabled = ((constant(MODULE_PAYMENT_ . strtoupper($this->code) . _STATUS) == 'True') ? true : false);
-        if (is_object($order)) {
+        $this->title = constant("MODULE_PAYMENT_" . strtoupper($this->code) . "_TEXT_TITLE");
+        $this->description = constant("MODULE_PAYMENT_" . strtoupper($this->code) . "_TEXT_DESCRIPTION");
+        $this->sort_order = constant("MODULE_PAYMENT_" . strtoupper($this->code) . "_SORT_ORDER");
+        $this->enabled = (constant("MODULE_PAYMENT_" . strtoupper($this->code) . "_STATUS") == 'True');
+
+        if (is_object($order) && $this->enabled) {
             $this->update_status();
-            if ($this->isKlarnaPayLater() && $this->enabled) {
+
+            if ($this->isKlarnaPayLater()) {
                 $this->enabled = $this->gingerKlarnaPayLaterIpFiltering();
-            } elseif ($this->isAfterPay() && $this->enabled) {
+            } elseif ($this->isAfterPay()) {
                 $this->enabled = $this->gingerAfterPayIpFiltering() && $this->gingerAfterPayCountriesValidation($order);
-            } elseif ($this->isApplePay() && $this->enabled) {
+            } elseif ($this->isApplePay()) {
                 $this->enabled = $this->applePayDetection();
             } else
                 if ($this->code != GINGER_BANK_PREFIX) {
@@ -47,7 +49,7 @@ class gingerPaymentDefault extends gingerGateway
                 }
         }
 
-        if ($this->enabled === true) {
+        if ($this->enabled == true) {
             try {
                 $this->ginger = static::getClient();
             } catch (Exception $exception) {
@@ -57,6 +59,7 @@ class gingerPaymentDefault extends gingerGateway
                 $this->title .= '<span class="alert">' . constant(MODULE_PAYMENT_ . strtoupper(GINGER_BANK_PREFIX) . _ERROR_API_KEY) . '</span>';
             }
         }
+
 
     }
 

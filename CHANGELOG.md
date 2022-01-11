@@ -67,5 +67,6 @@
 * Implemented extra option to iDeal issuer list, with empty value.
 * Updated customer array.
 * Updated field, which is has been used for before capturing check.
-* Fixed iDeal issuer form waring message, where constant prints instead of a label.
+* Solved iDeal issuer form waring message, where constant prints instead of a label.
+* Solved issue when payment couldn't be switched off.
 * Replaced constant version to placeholders, to replace it on GitHub actions steps according to tag version. 
